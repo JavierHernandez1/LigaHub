@@ -1,0 +1,28 @@
+digraph LigaHubER {
+  graph [rankdir=LR, bgcolor="white", pad="0.25", nodesep="0.45", ranksep="0.8", label="LigaHub — Diagrama entidad-relación", labelloc=t, fontsize=20, fontname="Arial"];
+  node [shape=record, style="rounded,filled", fillcolor="#F3F6FA", color="#536579", fontname="Arial", fontsize=10, margin="0.12,0.08"];
+  edge [color="#526579", fontname="Arial", fontsize=9, arrowsize=0.7];
+  competitions [label="{COMPETITIONS|PK id\lname, slug (UQ)\ltype, organizer\lsoft deletes\l}"];
+  categories [label="{CATEGORIES|PK id\lname, slug (UQ)\lage_group, gender\lsoft deletes\l}"];
+  seasons [label="{SEASONS|PK id\lFK competition_id\lFK category_id\lname, starts_on, ends_on\lstatus, soft deletes\lUQ competition/category/name\l}"];
+  venues [label="{VENUES|PK id\lname, city, address\lcapacity, soft deletes\l}"];
+  teams [label="{TEAMS|PK id\lFK venue_id (nullable)\lname, slug (UQ), city\lfounded_year, soft deletes\l}"];
+  players [label="{PLAYERS|PK id\lfirst_name, last_name\ldocument_number (UQ)\lbirth_date, preferred_foot\lsoft deletes\l}"];
+  player_team [label="{PLAYER_TEAM (pivot N:N)|PK id\lFK player_id, team_id, season_id\lsquad_number, position\ljoined_on, left_on, is_captain\lUQ player/season; UQ team/season/number\l}"];
+  fixtures [label="{FIXTURES|PK id\lFK season_id, home_team_id, away_team_id\lFK venue_id (nullable)\lmatchday, scheduled_at, status\lhome_score, away_score, soft deletes\lCHECK home <> away; paired scores\l}"];
+  match_events [label="{MATCH_EVENTS|PK id\lFK fixture_id, team_id\lFK player_id (nullable)\ltype, minute, extra_minute, notes\l}"];
+  users [label="{USERS (Laravel)|PK id\lname, email (UQ)\lpassword, timestamps\l}"];
+  competitions -> seasons [label="1:N"];
+  categories -> seasons [label="1:N"];
+  seasons -> fixtures [label="1:N"];
+  venues -> teams [label="1:N"];
+  venues -> fixtures [label="1:N", style=dashed];
+  teams -> player_team [label="1:N"];
+  players -> player_team [label="1:N"];
+  seasons -> player_team [label="1:N"];
+  teams -> fixtures [label="local 1:N"];
+  teams -> fixtures [label="visitante 1:N", constraint=false];
+  fixtures -> match_events [label="1:N"];
+  teams -> match_events [label="1:N"];
+  players -> match_events [label="0..1:N"];
+}
