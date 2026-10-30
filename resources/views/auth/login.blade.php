@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -80,22 +80,28 @@
         <form method="POST" action="{{ route('login.store') }}">
             @csrf
 
-            <label for="email">Correo electrónico</label>
-            <input id="email" type="email" name="email" value="{{ old('email') }}" autocomplete="email" required autofocus>
-            @error('email')
-                <p class="error">{{ $message }}</p>
-            @enderror
+            <x-forms.label for="email" required>Correo electrónico</x-forms.label>
+            <x-forms.input
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                autofocus
+            />
 
-            <label for="password">Contraseña</label>
-            <input id="password" type="password" name="password" autocomplete="current-password" required>
-            @error('password')
-                <p class="error">{{ $message }}</p>
-            @enderror
+            <x-forms.label for="password" required>Contraseña</x-forms.label>
+            <x-forms.input
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+            />
 
-            <label class="remember">
-                <input type="checkbox" name="remember" value="1">
-                Recordar mi sesión
-            </label>
+            <div class="remember">
+                <x-forms.checkbox name="remember">
+                    Recordar mi sesión
+                </x-forms.checkbox>
+            </div>
 
             <button type="submit">Entrar en LigaHub</button>
         </form>

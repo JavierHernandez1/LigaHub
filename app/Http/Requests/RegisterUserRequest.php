@@ -12,7 +12,7 @@ class RegisterUserRequest extends FormRequest
         return true;
     }
 
-    public static function validationRules(): array
+    public static function rulesForRegistration(): array
     {
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -23,6 +23,6 @@ class RegisterUserRequest extends FormRequest
 
     public function rules(): array
     {
-        return self::validationRules();
+        return self::rulesForRegistration();
     }
 }

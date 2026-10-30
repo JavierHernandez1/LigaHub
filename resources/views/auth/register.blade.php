@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -72,29 +72,36 @@
         <form method="POST" action="{{ route('register.store') }}">
             @csrf
 
-            <label for="name">Nombre completo</label>
-            <input id="name" type="text" name="name" value="{{ old('name') }}" autocomplete="name" required>
-            @error('name')
-                <p class="error">{{ $message }}</p>
-            @enderror
+            <x-forms.label for="name" required>Nombre completo</x-forms.label>
+            <x-forms.input
+                name="name"
+                autocomplete="name"
+                required
+            />
 
-            <label for="email">Correo electrónico</label>
-            <input id="email" type="email" name="email" value="{{ old('email') }}" autocomplete="email" required>
-            @error('email')
-                <p class="error">{{ $message }}</p>
-            @enderror
+            <x-forms.label for="email" required>Correo electrónico</x-forms.label>
+            <x-forms.input
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+            />
 
-            <label for="password">Contraseña</label>
-            <input id="password" type="password" name="password" autocomplete="new-password" required>
-            @error('password')
-                <p class="error">{{ $message }}</p>
-            @enderror
+            <x-forms.label for="password" required>Contraseña</x-forms.label>
+            <x-forms.input
+                name="password"
+                type="password"
+                autocomplete="new-password"
+                required
+            />
 
-            <label for="password_confirmation">Confirmar contraseña</label>
-            <input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password" required>
-            @error('password_confirmation')
-                <p class="error">{{ $message }}</p>
-            @enderror
+            <x-forms.label for="password_confirmation" required>Confirmar contraseña</x-forms.label>
+            <x-forms.input
+                name="password_confirmation"
+                type="password"
+                autocomplete="new-password"
+                required
+            />
 
             <button type="submit">Crear cuenta</button>
         </form>
