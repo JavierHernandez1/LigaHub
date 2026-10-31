@@ -145,4 +145,74 @@ class CompetitionCrudTest extends TestCase
             'id' => $competition->id,
         ]);
     }
+
+    public function test_competition_creation_rejects_invalid_slug_and_type(): void
+    {
+        $organizer = User::factory()->create(['role' => 'organizer']);
+
+        $this->actingAs($organizer)
+            ->post(route('competitions.store'), [
+                'name' => 'Competición inválida',
+                'slug' => 'slug invalido!',
+                'type' => 'invalid',
+            ])
+            ->assertSessionHasErrors(['slug', 'type']);
+    }
+
+    public function test_competition_creation_rejects_duplicate_slug(): void
+    {
+        $organizer = User::factory()->create(['role' => 'organizer']);
+
+        Competition::factory()->create(['slug' => 'liga-existente']);
+
+        $this->actingAs($organizer)
+            ->post(route('competitions.store'), [
+                'name' => 'Otra liga',
+                'slug' => 'liga-existente',
+                'type' => 'league',
+            ])
+            ->assertSessionHasErrors('slug');
+    }
+
+    public function test_competition_update_allows_keeping_its_own_slug(): void
+    {
+        $organizer = User::factory()->create(['role' => 'organizer']);
+        $competition = Competition::factory()->create([
+            'name' => 'Liga original',
+            'slug' => 'liga-original',
+        ]);
+
+        $this->actingAs($organizer)
+            ->put(route('competitions.update', $competition), [
+                'name' => 'Liga actualizada',
+                'slug' => 'liga-original',
+                'type' => $competition->type,
+            ])
+            ->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('competitions', [
+            'id' => $competition->id,
+            'name' => 'Liga actualizada',
+            'slug' => 'liga-original',
+        ]);
+    }
+
+    public function test_competition_update_rejects_another_competitions_slug(): void
+    {
+        $organizer = User::factory()->create(['role' => 'organizer']);
+
+        Competition::factory()->create(['slug' => 'liga-ocupada']);
+
+        $competition = Competition::factory()->create([
+            'slug' => 'liga-propia',
+        ]);
+
+        $this->actingAs($organizer)
+            ->put(route('competitions.update', $competition), [
+                'name' => $competition->name,
+                'slug' => 'liga-ocupada',
+                'type' => $competition->type,
+            ])
+            ->assertSessionHasErrors('slug');
+    }
 }

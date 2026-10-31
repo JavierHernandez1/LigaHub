@@ -45,12 +45,14 @@
     </div>
 
     <div>
-        <x-forms.label for="description" value="Descripción" />
-        <textarea id="description" name="description" rows="4"
-                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">{{ old('description', $competition?->description) }}</textarea>
-        @error('description')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-        @enderror
+        <x-forms.label for="description" required>Descripción</x-forms.label>
+        <x-forms.textarea
+            name="description"
+            :value="$competition?->description"
+            rows="4"
+            maxlength="10000"
+            class="mt-1 block w-full"
+        />
     </div>
 
     <div class="flex gap-3">
